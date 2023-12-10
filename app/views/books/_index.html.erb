@@ -8,7 +8,11 @@
   </thead>
   <tbody>
     <% books.each do |book| %>
-      <td><%= image_tag book.user.get_profile_image(80,80) %></td>
+      <td>
+        <%= link_to user_path(book.user_id) do %>
+          <%= image_tag book.user.get_profile_image(80,80) %>
+        <% end %>
+        </td>
       <td>
         <%= link_to book_path(book) do %>
           <%= book.title %>
