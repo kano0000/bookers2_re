@@ -3,15 +3,35 @@
     <td><%= image_tag user.get_profile_image(100,100) %></td>
   </tr>
   <tr>
-    <td>name</td>
-    <td><%= user.name %></td>
+    <th>name</th>
+    <th><%= user.name %></th>
   </tr>
   <tr>
-    <td>introduction</td>
-    <td><%= user.introduction %></td>
+    <th>introduction</th>
+    <th><%= user.introduction %></th>
+  </tr>
+  <tr>
+    <th>follows</th>
+    <th>
+      <%= link_to user_followings_path(user) do %>
+        <%= user.followings.count %>
+      <% end %>
+    </th>
+  </tr>
+  <tr>
+    <th>followers</th>
+    <th>
+      <%= link_to user_followers_path(user) do %>
+        <%= user.followers.count %>
+      <% end %>
+    </th>
   </tr>
 </table>
 
-<%= link_to edit_user_path(user.id), class: "btn btn-block btn-outline-secondary" do %>
-  <i class="fa-solid fa-user-gear"></i>
+<% if user == current_user %>
+  <%= link_to edit_user_path(user.id), class: "btn btn-block btn-outline-secondary" do %>
+    <i class="fa-solid fa-user-gear"></i>
+  <% end %>
+<% else %>
+  <td><%= render "relationships/btn", user: user, options: { class: ""} %></td>
 <% end %>
