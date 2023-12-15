@@ -2,8 +2,10 @@ class BooksController < ApplicationController
   before_action :is_matching_login_user, only: [:edit, :update]
   
   def index
+    to = Time.current.at_end_of_day
+    from = (to - 6.day).at_beginning_of_day
     @book = Book.new
-    @books = Book.all
+    @books = Book.includes(:favorites).sort_by{ |book| -book.favorites.where(created_at: from ...to).count }
   end
 
   def show
@@ -11,7 +13,7 @@ class BooksController < ApplicationController
     @book_new = Book.new
     @book_comment = BookComment.new
 
-end
+  end
 
   def edit
     @book = Book.find(params[:id])
