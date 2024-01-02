@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-         
+
   has_many :books, dependent: :destroy
   has_many :book_comments, dependent: :destroy
   has_many :favorites, dependent: :destroy
@@ -13,16 +13,16 @@ class User < ApplicationRecord
   # 一覧画面で使う
   has_many :followings, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
-  
+
   has_many :user_rooms, dependent: :destroy
   has_many :chats, dependent: :destroy
   has_many :rooms, through: :user_rooms
-  
+
   has_one_attached :profile_image
-  
+
   validates :name, uniqueness: true, length: { in: 2..20 }
   validates :introduction, length: { maximum: 50}
-  
+
   def get_profile_image(width,height)
     unless profile_image.attached?
       file_path = Rails.root.join('app/assets/images/no_image.jpg')
@@ -30,22 +30,22 @@ class User < ApplicationRecord
     end
       profile_image.variant(resize_to_limit: [width, height]).processed
   end
-  
+
   # 指定したユーザーをフォローする
   def follow(user)
     active_relationships.create(followed_id: user.id)
   end
-  
+
   # 指定したユーザーのフォローを解除する
   def unfollow(user)
     active_relationships.find_by(followed_id: user.id).destroy
   end
-  
+
   # 指定したユーザーをフォローしているかどうかを判定
   def following?(user)
     followings.include?(user)
   end
-  
+
   # 検索
   def self.search_for(content, method)
     if method == "perfect"
@@ -58,5 +58,5 @@ class User < ApplicationRecord
       User.where("name LIKE ?", "%" + content + "%")
     end
   end
-  
+
 end

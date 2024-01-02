@@ -36,7 +36,10 @@ class ChatsController < ApplicationController
     @chat = current_user.chats.new(chat_params)
     
   # バリデーションに合格しない場合はエラーを表示
-    render :validate unless @chat.save
+    unless @chat.save
+      render :validater
+    end
+    
   end
   
   # チャットメッセージの削除
